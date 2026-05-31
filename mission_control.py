@@ -21,6 +21,14 @@ areas_monitoradas = [
     "Temperatura", "Comunicacao", "Bateria", "Oxigenio", "Estabilidade"
 ]
 
+pts_areas_monitoradas = [
+ "Temperatura interna",
+ "Comunicação com a base",
+ "Sistema de energia",
+ "Suporte de oxigênio",
+ "Estabilidade operacional"
+]
+
 Temperaturas = []
 Comunicação = []
 Bateria = []
@@ -28,6 +36,8 @@ Oxigenio = []
 Estabilidade = []
 
 pts_total_ciclo = []
+pts_total_atributos = []
+
 
 num_ciclo = 0
 ciclo_aux = 0
@@ -139,10 +149,11 @@ def analisar_tendencia():
         return "A missão tem tendência a piorar"
     else:
         return "A missão permaneceu estável em relação ao inicio"
-        
+
 for ciclo in dados_missao:
     ciclo_aux += 1
     print(f"CICLO: {ciclo_aux}\n")
+
     num_ciclo = 0
     for info in ciclo:
         if num_ciclo == 4:
@@ -162,10 +173,13 @@ for ciclo in dados_missao:
             Temperaturas.append(ciclo[num_ciclo])
 
         num_ciclo += 1
+
     print(f"Pontuacao de risco do ciclo: {risco_ciclo(ciclo_aux-1)}")
     print(classificar_ciclo(sum(pts_ciclos[ciclo_aux-1])))
     print(f"Recomendacoes:\n{gerar_recomendacoes(ciclo_aux - 1)}")
     print("---------------------------------------")
+
+pts_atributos = list(map(list, zip(*pts_ciclos)))
 
 for qnt_cri in pts_total_ciclo:
     if qnt_cri > 5:
@@ -203,4 +217,15 @@ print(f"Risco médio da missão: {round(sum(pts_total_ciclo)/len(pts_total_ciclo
 print(f"Quantidade de ciclos críticos: {ciclo_critico}\n")
 
 print(f"Tendência da missão: {analisar_tendencia()}\n")
+
+print(f"Pontuação acumulada por area:\n")
+
+ciclo_aux = 0
+for ciclo in range(len(pts_areas_monitoradas)):
+    print(f"{pts_areas_monitoradas[ciclo_aux]}: {sum(pts_atributos[ciclo_aux])}")
+    pts_total_atributos.append(sum(pts_atributos[ciclo_aux]))
+    ciclo_aux += 1
+
+print("\nArea mais afetada: ")
+print(f"{pts_areas_monitoradas[pts_total_atributos.index(max(pts_total_atributos))]}")
 
