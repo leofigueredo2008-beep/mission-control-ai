@@ -1,11 +1,11 @@
 
 dados_missao = [
     [27, 31, 35, 34, 39],
-    [54, 48, 56, 89, 72],
-    [88, 94, 30, 48, 75],
-    [87, 96, 81, 99, 56],
+    [32, 48, 56, 89, 72],
+    [38, 94, 30, 48, 75],
+    [41, 96, 81, 99, 56],
     [19, 98, 76, 52, 15],
-    [78, 98, 89, 45, 34]
+    [36, 98, 89, 45, 34]
 ]
 
 pts_ciclos = [
@@ -29,11 +29,11 @@ pts_areas_monitoradas = [
  "Estabilidade operacional"
 ]
 
-Temperaturas = []
-Comunicação = []
-Bateria = []
-Oxigenio = []
-Estabilidade = []
+temperaturas = []
+comunicacao_lista = []
+bateria_lista = []
+oxigenio_lista = []
+estabilidade_lista = []
 
 pts_total_ciclo = []
 pts_total_atributos = []
@@ -43,13 +43,13 @@ num_ciclo = 0
 ciclo_aux = 0
 ciclo_critico = 0
 
-print("===========================================\n")
+print("==============================================================\n")
 print("MISSION CONTROL AI\n")
-print("===========================================\n")
+print("==============================================================\n")
 print("Missao: Alpha Century\n")
 print("Equipe: FIAP COSMICA\n")
 print(f"Quantidade de ciclos analisados: {len(dados_missao)}\n")
-print("===========================================\n")
+print("==============================================================\n")
 
 def verificar_temperatura(temperatura, indice_ciclo):
     if temperatura <= 18:
@@ -65,7 +65,7 @@ def verificar_temperatura(temperatura, indice_ciclo):
         pts_ciclos[indice_ciclo].append(2)
         return "CRITICO | Temperatura muito alta, risco de superaquecimento"
 
-def verificar_comunicação(comunicacao, indice_ciclo):
+def verificar_comunicacao(comunicacao, indice_ciclo):
     if comunicacao < 30:
         pts_ciclos[indice_ciclo].append(2)
         return "CRITICO | Comunicação com a base em nivel critico"
@@ -138,9 +138,9 @@ def gerar_recomendacoes(indice_ciclo):
     return resultado
 
 def risco_ciclo(indice_ciclo):
-    Soma = sum(pts_ciclos[indice_ciclo])
-    pts_total_ciclo.append(Soma)
-    return Soma
+    soma = sum(pts_ciclos[indice_ciclo])
+    pts_total_ciclo.append(soma)
+    return soma
 
 def analisar_tendencia():
     if pts_total_ciclo[0] > pts_total_ciclo[-1]:
@@ -149,6 +149,14 @@ def analisar_tendencia():
         return "A missão tem tendência a piorar"
     else:
         return "A missão permaneceu estável em relação ao inicio"
+    
+def classificacao_final(soma_final):
+    if soma_final >= 36:
+        return "MISSÃO CRÍTICA"
+    elif soma_final < 36 and soma_final >= 18:
+        return "MISSÃO EM ATENÇÃO"
+    else:
+        return "MISSÃO ESTÁVEL"
 
 for ciclo in dados_missao:
     ciclo_aux += 1
@@ -158,52 +166,46 @@ for ciclo in dados_missao:
     for info in ciclo:
         if num_ciclo == 4:
             print(f"{areas_monitoradas[num_ciclo]}: {ciclo[num_ciclo]}% | {verificar_estabilidade(ciclo[num_ciclo], ciclo_aux - 1)}")
-            Estabilidade.append(ciclo[num_ciclo])
+            estabilidade_lista.append(ciclo[num_ciclo])
         elif num_ciclo == 3:
             print(f"{areas_monitoradas[num_ciclo]}: {ciclo[num_ciclo]}% | {verificar_oxigenio(ciclo[num_ciclo], ciclo_aux - 1)}")
-            Oxigenio.append(ciclo[num_ciclo])
+            oxigenio_lista.append(ciclo[num_ciclo])
         elif num_ciclo == 2:
             print(f"{areas_monitoradas[num_ciclo]}: {ciclo[num_ciclo]}% | {verificar_bateria(ciclo[num_ciclo], ciclo_aux - 1)}")
-            Bateria.append(ciclo[num_ciclo])            
+            bateria_lista.append(ciclo[num_ciclo])            
         elif num_ciclo == 1:
-            print(f"{areas_monitoradas[num_ciclo]}: {ciclo[num_ciclo]}% | {verificar_comunicação(ciclo[num_ciclo], ciclo_aux - 1)}")
-            Comunicação.append(ciclo[num_ciclo])
+            print(f"{areas_monitoradas[num_ciclo]}: {ciclo[num_ciclo]}% | {verificar_comunicacao(ciclo[num_ciclo], ciclo_aux - 1)}")
+            comunicacao_lista.append(ciclo[num_ciclo])
         else:
             print(f"{areas_monitoradas[num_ciclo]}: {ciclo[num_ciclo]} graus celsius | {verificar_temperatura(ciclo[num_ciclo],ciclo_aux - 1)}")
-            Temperaturas.append(ciclo[num_ciclo])
+            temperaturas.append(ciclo[num_ciclo])
 
         num_ciclo += 1
 
-    print(f"Pontuacao de risco do ciclo: {risco_ciclo(ciclo_aux-1)}")
-    print(classificar_ciclo(sum(pts_ciclos[ciclo_aux-1])))
-    print(f"Recomendacoes:\n{gerar_recomendacoes(ciclo_aux - 1)}")
-    print("---------------------------------------")
+    print(f"\nPontuacao de risco do ciclo: {risco_ciclo(ciclo_aux-1)}")
+    print(f"\n{classificar_ciclo(sum(pts_ciclos[ciclo_aux-1]))}")
+    print(f"\nRecomendacoes:\n{gerar_recomendacoes(ciclo_aux - 1)}")
+    print("-----------------------------------------------------------------------")
 
 pts_atributos = list(map(list, zip(*pts_ciclos)))
 
 for qnt_cri in pts_total_ciclo:
     if qnt_cri > 5:
         ciclo_critico += 1
-    else:
-        ciclo_critico
 
-media_temp = (sum(Temperaturas))/(len(Temperaturas))
-media_comu = (sum(Comunicação))/(len(Comunicação))
-media_bate = (sum(Bateria))/(len(Bateria))
-media_oxi = (sum(Oxigenio))/(len(Oxigenio))
-media_esta = (sum(Estabilidade))/(len(Estabilidade))
+media_temp = (sum(temperaturas))/(len(temperaturas))
+media_comu = (sum(comunicacao_lista))/(len(comunicacao_lista))
+media_bate = (sum(bateria_lista))/(len(bateria_lista))
+media_oxi = (sum(oxigenio_lista))/(len(oxigenio_lista))
+media_esta = (sum(estabilidade_lista))/(len(estabilidade_lista))
 
-
-print("\n")
+print("\n==============================================================\n")
 print("RELATORIO FINAL DA MISSAO\n")
-print("\n")
-print("---------------------------------------")
+print("==============================================================\n")
 
 print("Missao: Alpha Century\n")
 print("Equipe: FIAP COSMICA\n")
 print(f"Quantidade de ciclos analisados: {len(dados_missao)}\n")
-
-
 
 print(f"Media de temperatura: {round(media_temp,2)} graus celsius")
 print(f"Media de comunicação: {round(media_comu,2)} %")
@@ -227,5 +229,20 @@ for ciclo in range(len(pts_areas_monitoradas)):
     ciclo_aux += 1
 
 print("\nArea mais afetada: ")
-print(f"{pts_areas_monitoradas[pts_total_atributos.index(max(pts_total_atributos))]}")
+print(f"{pts_areas_monitoradas[pts_total_atributos.index(max(pts_total_atributos))]}\n")
 
+soma_total = sum(pts_total_ciclo)
+classificacao = classificacao_final(soma_total)
+
+print("Classificação final da missão:")
+print(classificacao)
+
+print("\nConclusao:")
+if classificacao == "MISSÃO CRÍTICA":
+    print("A missão apresentou situação crítica durante a operação. Múltiplos sistemas estiveram em risco simultaneamente. É necessário acionar todos os protocolos de emergência e priorizar o suporte à vida, energia e comunicação.")
+elif classificacao == "MISSÃO EM ATENÇÃO":
+    print("A missão apresentou instabilidade relevante durante a operação. Apesar de não atingir estado crítico, existem sistemas que requerem atenção contínua. A equipe deve manter o plano de contingência ativo e monitorar de perto as áreas afetadas.")
+else:
+    print("A missão transcorreu de forma estável. Todos os sistemas operaram dentro dos limites esperados. Recomenda-se manter o monitoramento contínuo para garantir a estabilidade nas próximas fases da missão.")
+
+print("\n==============================================================\n")
