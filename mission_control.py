@@ -23,9 +23,9 @@ areas_monitoradas = [
 
 pts_areas_monitoradas = [
  "Temperatura interna",
- "Comunicação com a base",
+ "Comunicacao com a base",
  "Sistema de energia",
- "Suporte de oxigênio",
+ "Suporte de oxigenio",
  "Estabilidade operacional"
 ]
 
@@ -57,7 +57,7 @@ def verificar_temperatura(temperatura, indice_ciclo):
         return "ATENCAO | Temperatura muito baixa, risco de congelamento"
     elif temperatura > 18 and temperatura <= 30:
         pts_ciclos[indice_ciclo].append(0)
-        return "NORMAL | Temperatura estável"
+        return "NORMAL | Temperatura estavel"
     elif temperatura > 30 and temperatura <= 35:
         pts_ciclos[indice_ciclo].append(1)
         return "ATENCAO | Temperatura elevada"
@@ -68,13 +68,13 @@ def verificar_temperatura(temperatura, indice_ciclo):
 def verificar_comunicacao(comunicacao, indice_ciclo):
     if comunicacao < 30:
         pts_ciclos[indice_ciclo].append(2)
-        return "CRITICO | Comunicação com a base em nivel critico"
+        return "CRITICO | Comunicacao com a base em nivel critico"
     elif comunicacao >= 30 and comunicacao < 60:
         pts_ciclos[indice_ciclo].append(1)
-        return "ATENCAO | Comunicação instavel"
+        return "ATENCAO | Comunicacao instavel"
     else:
         pts_ciclos[indice_ciclo].append(0)
-        return "NORMAL | Comunicação estavel"
+        return "NORMAL | Comunicacao estavel"
 
 def verificar_bateria(bateria, indice_ciclo):
     if bateria < 20:
@@ -93,7 +93,7 @@ def verificar_oxigenio(oxigenio, indice_ciclo):
         return "CRITICO | Oxigenio em nivel critico"
     elif oxigenio >= 80 and oxigenio < 90:
         pts_ciclos[indice_ciclo].append(1)
-        return "ATENCAO | Falta de oxigenio"
+        return "ATENCAO | Nivel de oxigenio abaixo do ideal"
     else:
         pts_ciclos[indice_ciclo].append(0)
         return "NORMAL | Oxigenio estavel"
@@ -144,19 +144,19 @@ def risco_ciclo(indice_ciclo):
 
 def analisar_tendencia():
     if pts_total_ciclo[0] > pts_total_ciclo[-1]:
-        return "A missão tem tendência a melhorar"
+        return "A missao tem tendencia a melhorar"
     elif pts_total_ciclo[0] < pts_total_ciclo[-1]:
-        return "A missão tem tendência a piorar"
+        return "A missao tem tendencia a piorar"
     else:
         return "A missão permaneceu estável em relação ao inicio"
     
 def classificacao_final(soma_final):
     if soma_final >= 36:
-        return "MISSÃO CRÍTICA"
+        return "MISSAO CRITICA"
     elif soma_final < 36 and soma_final >= 18:
-        return "MISSÃO EM ATENÇÃO"
+        return "MISSAO EM ATENÇAO"
     else:
-        return "MISSÃO ESTÁVEL"
+        return "MISSAO ESTAVEL"
 
 for ciclo in dados_missao:
     ciclo_aux += 1
@@ -210,17 +210,17 @@ print(f"Quantidade de ciclos analisados: {len(dados_missao)}\n")
 print(f"Media de temperatura: {round(media_temp,2)} graus celsius")
 print(f"Media de comunicação: {round(media_comu,2)} %")
 print(f"Media de bateria: {round(media_bate,2)} %")
-print(f"Media de oxigênio: {round(media_oxi,2)} %")
+print(f"Media de oxigenio: {round(media_oxi,2)} %")
 print(f"Media de estabilidade: {round(media_esta,2)} %\n")
 
 print(f"Ciclo mais critico: {pts_total_ciclo.index(max(pts_total_ciclo))+ 1}")
-print(f"Maior pontuação de risco: {max(pts_total_ciclo)}")
-print(f"Risco médio da missão: {round(sum(pts_total_ciclo)/len(pts_total_ciclo),2)}")
-print(f"Quantidade de ciclos críticos: {ciclo_critico}\n")
+print(f"Maior pontuacao de risco: {max(pts_total_ciclo)}")
+print(f"Risco medio da missao: {round(sum(pts_total_ciclo)/len(pts_total_ciclo),2)}")
+print(f"Quantidade de ciclos criticos: {ciclo_critico}\n")
 
-print(f"Tendência da missão: {analisar_tendencia()}\n")
+print(f"Tendencia da missao: {analisar_tendencia()}\n")
 
-print(f"Pontuação acumulada por area:\n")
+print(f"Pontuacao acumulada por area:\n")
 
 ciclo_aux = 0
 for ciclo in range(len(pts_areas_monitoradas)):
@@ -234,15 +234,15 @@ print(f"{pts_areas_monitoradas[pts_total_atributos.index(max(pts_total_atributos
 soma_total = sum(pts_total_ciclo)
 classificacao = classificacao_final(soma_total)
 
-print("Classificação final da missão:")
+print("Classificacao final da missao:")
 print(classificacao)
 
 print("\nConclusao:")
-if classificacao == "MISSÃO CRÍTICA":
-    print("A missão apresentou situação crítica durante a operação. Múltiplos sistemas estiveram em risco simultaneamente. É necessário acionar todos os protocolos de emergência e priorizar o suporte à vida, energia e comunicação.")
-elif classificacao == "MISSÃO EM ATENÇÃO":
-    print("A missão apresentou instabilidade relevante durante a operação. Apesar de não atingir estado crítico, existem sistemas que requerem atenção contínua. A equipe deve manter o plano de contingência ativo e monitorar de perto as áreas afetadas.")
+if classificacao == "MISSAO CRITICA":
+    print("A missao apresentou situacao critica durante a operacao. Multiplos sistemas estiveram em risco simultaneamente. E necessario acionar todos os protocolos de emergencia e priorizar o suporte a vida, energia e comunicacao.")
+elif classificacao == "MISSAO EM ATENCAO":
+    print("A missao apresentou instabilidade relevante durante a operacao. Apesar de não atingir estado critico, existem sistemas que requerem atencao continua. A equipe deve manter o plano de contingencia ativo e monitorar de perto as áreas afetadas.")
 else:
-    print("A missão transcorreu de forma estável. Todos os sistemas operaram dentro dos limites esperados. Recomenda-se manter o monitoramento contínuo para garantir a estabilidade nas próximas fases da missão.")
+    print("A missao transcorreu de forma estavel. Todos os sistemas operaram dentro dos limites esperados. Recomenda-se manter o monitoramento contínuo para garantir a estabilidade nas proximas fases da missao.")
 
 print("\n==============================================================\n")
